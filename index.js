@@ -1,15 +1,19 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
+const {response} = require('express');
 
 const port = process.env.PORT || 5000;
+
+const {MongoClient, ServerApiVersion} = require('mongodb');
 
 app.use(cors());
 app.use(express.json());
 
 
-const uri = "mongodb+srv://mollikacomputer3:EhFlBrr6mzb57uML@cluster0.q5xegkn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+//password: xuuHWRYiahfvbPnx
+const uri = "mongodb+srv://mollikacomputer3:xuuHWRYiahfvbPnx@cluster0.q5xegkn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -22,14 +26,38 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    const userCollection = client.db('News-test').collection("user")
+    // Connect the client to the server	(optional starting in v4.7)
+    // // console.log("DAtabase connection Ranjit");   
+    // app.post('/users', async(req, res)=>{
+    //   const newUser = req.body;
+    //   console.log('adding New User', newUser);
+
+    //   const result = await userCollection.insertOne(newUser);
+    //   res.send({result:'success'})
+    // })
 
 
+    // get data from server
+    app.get('/users', async(req, res)=>{
+      await client.connect();
+      const userCollection = client.db('News-test').collection("user")
+
+      const query = {};
+      const cursor = userCollection.find(query);
+      const user = await cursor.toArray();
+      res.send(user);
+    });
+
+    // add new user to server
     app.post('/users', async(req, res)=>{
-      const user = await req.body;
-      console.log('New User', user);
-
+      await client.connect();
+      const userCollection = client.db('News-test').collection("user");
+      const newUser = req.body;
+      console.log("get new user from client side ", newUser);
+      const result = await userCollection.insertOne(newUser);
+      res.send({result:"Success"});
     })
 
     // Send a ping to confirm a successful connection
