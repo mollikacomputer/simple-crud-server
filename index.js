@@ -57,7 +57,8 @@ async function run() {
       const newUser = req.body;
       console.log("get new user from client side ", newUser);
       const result = await userCollection.insertOne(newUser);
-      res.send({result:"Success"});
+      // res.send({result:"Success"});
+      res.send(result);
     })
 
     // Send a ping to confirm a successful connection
