@@ -36,35 +36,34 @@ async function run() {
       const user = await cursor.toArray();
       res.send(user);
     });
+
     // get single user copy id and paste after user/...
     app.get('/users/:id', async(req, res) =>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
       const user = await userCollection.findOne(query);
       res.send(user);
-    })
-    // add new user to server
+    });
+
+    // add post new user to server
     app.post('/users', async(req, res)=>{
       const newUser = req.body;
       console.log("get new user from client side ", newUser);
       const result = await userCollection.insertOne(newUser);
       // res.send({result:"Success"});
       res.send(result);
-    })
+    });
 
     // DELETE USER 
     app.delete('/users/:id', async(req, res)=>{
-      //client.close(); if this line not comment then every operation need under 2 lines added
-      // await client.connect();
-      // const userCollection = client.db('News-test').collection("user");
-
       const id = req.params.id;
       console.log("delete from database", id);
       const query = {_id: new ObjectId(id)};
       const result = await userCollection.deleteOne(query);
       res.send(result);
 
-    })
+    });
+    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
