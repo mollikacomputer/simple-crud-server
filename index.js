@@ -63,6 +63,15 @@ async function run() {
       res.send(result);
 
     });
+
+    // updated users
+    app.put('/users/:id', async(req, res)=>{
+      const id = req.params.id;
+      const updatedUser = req.body;
+      console.log(id, updatedUser);
+
+    })
+    
     
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
